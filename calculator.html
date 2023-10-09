@@ -15,6 +15,16 @@
         <input type="number" id="netProfit" name="netProfit">
         <br>
 
+        <label for="term">Term (in years):</label>
+        <select id="term" name="term">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <br>
+
         <input type="button" value="Calculate" onclick="calculateInvestment()">
     </form>
 
@@ -38,6 +48,7 @@
         function calculateInvestment() {
             const investorShares = parseFloat(document.getElementById("investorShares").value);
             const netProfit = parseFloat(document.getElementById("netProfit").value);
+            const term = parseInt(document.getElementById("term").value);
             const totalShares = 2000000;
             const ownershipPercentage = investorShares / totalShares;
             let investorQuarterlyProfit = netProfit * ownershipPercentage;
@@ -49,18 +60,18 @@
             let quarterlyDistributions = [];
             let yearlyValuations = [investorShares];
 
-            for (let i = 1; i <= 20; i++) {
+            for (let i = 1; i <= term * 4; i++) {
                 if (i > 1) {
                     growthFactor *= (1 + quarterlyGrowthRate);
                 }
                 const adjustedInvestorQuarterlyProfit = investorQuarterlyProfit * growthFactor;
                 totalPaidToInvestor += adjustedInvestorQuarterlyProfit;
-                quarterlyDistributions.push(formatNumber(adjustedInvestorQuarterlyProfit));
+                quarterlyDistributions.push(adjustedInvestorQuarterlyProfit);
                 quarterlyText += `Q${i}: $${formatNumber(adjustedInvestorQuarterlyProfit)}<br>`;
 
                 if (i % 4 === 0) {
                     const yearlyValuation = 4 * adjustedInvestorQuarterlyProfit;
-                    yearlyValuations.push(formatNumber(yearlyValuation));
+                    yearlyValuations.push(yearlyValuation);
                 }
             }
 
@@ -74,13 +85,25 @@
             new Chart(distributionCtx, {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: 20}, (_, i) => `Q${i + 1}`),
+                    labels: Array.from({length: term * 4}, (_, i) => `Q${i + 1}`),
                     datasets: [{
                         label: 'Quarterly Distributions',
                         data: quarterlyDistributions,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         fill: false
                     }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
                 }
             });
 
@@ -88,13 +111,25 @@
             new Chart(valuationCtx, {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: 5}, (_, i) => `Year ${i + 1}`),
+                    labels: Array.from({length: term}, (_, i) => `Year ${i + 1}`),
                     datasets: [{
                         label: 'Yearly Valuation',
                         data: yearlyValuations,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         fill: false
                     }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
                 }
             });
         }
