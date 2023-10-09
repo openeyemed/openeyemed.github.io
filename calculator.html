@@ -59,8 +59,9 @@
             const investorShares = parseFloat(document.getElementById("investorShares").value);
             const netProfit = parseFloat(document.getElementById("netProfit").value);
             const term = parseFloat(document.getElementById("term").value);
+
             const totalShares = 2000000;
-            const ownershipPercentage = (investorShares / totalShares);
+            const ownershipPercentage = investorShares / totalShares;
             let investorQuarterlyProfit = netProfit * ownershipPercentage;
 
             let quarterlyDistributions = [];
@@ -75,7 +76,9 @@
             let growthFactor = 1;
 
             for (let i = 1; i <= 20; i++) {
-                growthFactor *= (1 + quarterlyGrowthRate);
+                if (i > 1) {
+                    growthFactor *= (1 + quarterlyGrowthRate);
+                }
                 const adjustedInvestorQuarterlyProfit = investorQuarterlyProfit * growthFactor;
                 totalPaidToInvestor += adjustedInvestorQuarterlyProfit;
                 quarterlyDistributions.push(adjustedInvestorQuarterlyProfit.toFixed(2));
