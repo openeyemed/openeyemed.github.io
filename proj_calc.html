@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Investment Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Investment Calculator</h1>
+    <form id="calculator-form">
+        <label for="investorShares">Investor's Shares:</label>
+        <input type="number" id="investorShares" name="investorShares" min="1" max="2000000">
+        <br>
+
+        <label for="netProfit">Quarterly Net Profit After Reserves & Taxes*</label>
+        <input type="number" id="netProfit" name="netProfit">
+        <br>
+
+        <label for="term">Term (Years):</label>
+        <select id="term" name="term">
+            <option value="1">1 Year</option>
+            <option value="2">2 Years</option>
+            <option value="3">3 Years</option>
+            <option value="4">4 Years</option>
+            <option value="5">5 Years</option>
+        </select>
+        <br>
+
+        <input type="button" value="Calculate" onclick="calculateInvestment()">
+    </form>
+
+    <p>*This refers to the first quarterly profit period total. A CAGR of 25% will be used for illustration purposes.</p>
+
+    <h2>Results</h2>
+    <div id="results"></div>
+
+    <h2>Quarterly Distributions</h2>
+    <div id="quarterlyText"></div>
+    <div id="totalPaid"></div>
+    <canvas id="distributionChart" width="400" height="200"></canvas>
+
+    <h2>Shareholder's Potential Valuation of Shares</h2>
+    <div id="yearlyText"></div>
+    <canvas id="valuationChart" width="400" height="200"></canvas>
+
+    <script>
+        function formatMoney(amount) {
+            return amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        }
+
+        function calculateInvestment() {
+            const investorShares = parseFloat(document.getElementById("investorShares").value);
+            const netProfit = parseFloat(document.getElementById("netProfit").value);
+
+            const totalShares = 2000000;
+            const ownershipPercentage = (investorShares / totalShares);
+            let investorQuarterlyProfit = netProfit * ownershipPercentage;
+
+            let quarterlyDistributions = [];
+            let yearlyValuations = [];
+            let quarterlyLabels = [];
+            let yearlyLabels = [];
+            let quarterlyText = "";
+            let yearlyText = "";
+            let totalPaidToInvestor = 0;
+
+            const quarterlyGrowthRate = Math.pow(1 + 0.25, 1 / 4) - 1;
+            let growthFactor = 1;
+
+            for (let i = 1; i <= 20; i++) {
+                growthFactor *= (1 + quarterlyGrowthRate);
+                const adjustedInvestorQuarterlyProfit = investorQuarterlyProfit * growthFactor;
+                totalPaidToInvestor += adjustedInvestorQuarterlyProfit;
+                quarterlyDistributions.push(adjustedInvestorQuarterlyProfit.toFixed(2));
+                quarterlyLabels.push(`Q${i}`);
+                quarterlyText += `Q${i}: ${formatMoney(adjustedInvestorQuarterlyProfit)}<br>`;
+
+                if (i % 4 === 0) {
+                    const yearlyNetProfit = 4 * adjustedInvestorQuarterlyProfit;
+                    const yearlyValuation = 4 * yearlyNetProfit;
+                    yearlyValuations.push(yearlyValuation.toFixed(2));
+                    yearlyLabels.push(`Year ${i / 4}`);
+                    yearlyText += `Year ${i / 4}: ${formatMoney(yearlyValuation)}<br>`;
+                }
+            }
+
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = `Your quarterly distribution will be <strong>${formatMoney(adjustedInvestorQuarterlyProfit)}</strong> based on your ownership.`;
+
+            document.getElementById("quarterlyText").innerHTML = quarterlyText;
+            document.getElementById("totalPaid").innerHTML = `Total Paid to Investor: ${formatMoney(totalPaidToInvestor)}`;
+            document.getElementById("yearlyText").innerHTML = yearlyText;
+
+            // Quarterly Distributions Chart
+            const distributionCtx = document.getElementById("distributionChart").getContext('2d');
+            new Chart(distributionCtx, {
+                type: 'line',
+                data: {
+                    labels: quarterlyLabels,
+                    datasets: [{
+                        label: 'Quarterly Distributions',
+                        data: quarterlyDistributions,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        fill: false
+                    }]
+                }
+            });
+
+            // Yearly Valuation Chart
+            const valuationCtx = document.getElementById("valuationChart").getContext('2d');
+            new Chart(valuationCtx, {
+                type: 'line',
+                data: {
+                    labels: yearlyLabels,
+                    datasets: [{
+                        label: 'Yearly Valuation',
+                        data: yearlyValuations,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        fill: false
+                    }]
+                }
+            });
+        }
+    </script>
+</body>
+</html>
