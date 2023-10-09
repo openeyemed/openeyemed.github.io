@@ -46,7 +46,7 @@
     <div id="totalPaid"></div>
     <canvas id="distributionChart" width="400" height="200"></canvas>
 
-    <h2>Yearly Valuation</h2>
+    <h2>Shareholders Potential Valuation of Shares</h2>
     <div id="yearlyText"></div>
     <canvas id="valuationChart" width="400" height="200"></canvas>
 
@@ -63,7 +63,6 @@
             const totalShares = 2000000;
             const ownershipPercentage = (investorShares / totalShares);
             let investorQuarterlyProfit = netProfit * ownershipPercentage;
-            let adjustedInvestorQuarterlyProfit = investorQuarterlyProfit;
 
             let quarterlyDistributions = [];
             let yearlyValuations = [];
@@ -77,11 +76,8 @@
             let growthFactor = 1;
 
             for (let i = 1; i <= 20; i++) {
-                if (i % 4 === 0) {
-                    growthFactor *= (1 + quarterlyGrowthRate);
-                }
-
-                adjustedInvestorQuarterlyProfit = investorQuarterlyProfit * growthFactor;
+                growthFactor *= (1 + quarterlyGrowthRate);
+                const adjustedInvestorQuarterlyProfit = investorQuarterlyProfit * growthFactor;
                 totalPaidToInvestor += adjustedInvestorQuarterlyProfit;
                 quarterlyDistributions.push(adjustedInvestorQuarterlyProfit.toFixed(2));
                 quarterlyLabels.push(`Q${i}`);
