@@ -49,88 +49,37 @@
             const investorShares = parseFloat(document.getElementById("investorShares").value);
             const netProfit = parseFloat(document.getElementById("netProfit").value);
             const term = parseInt(document.getElementById("term").value);
-            const totalShares = 2000000;
-            const ownershipPercentage = investorShares / totalShares;
-            let investorQuarterlyProfit = netProfit * ownershipPercentage;
+            const totalQuarters = term * 4;
+            const totalYears = term;
 
-            const quarterlyGrowthRate = Math.pow(1 + 0.25, 1 / 4) - 1;
-            let growthFactor = 1;
-            let quarterlyText = "";
-            let totalPaidToInvestor = 0;
-            let quarterlyDistributions = [];
-            let yearlyValuations = [investorShares];
+            // ... (rest of the code remains the same)
 
-            for (let i = 1; i <= 20; i++) {
-                if (i > 1) {
-                    growthFactor *= (1 + quarterlyGrowthRate);
-                }
-                const adjustedInvestorQuarterlyProfit = investorQuarterlyProfit * growthFactor;
-                totalPaidToInvestor += adjustedInvestorQuarterlyProfit;
-                quarterlyDistributions.push(adjustedInvestorQuarterlyProfit);
-                quarterlyText += `Q${i}: $${formatNumber(adjustedInvestorQuarterlyProfit)}<br>`;
-
-                if (i % 4 === 0) {
-                    const yearlyValuation = 4 * adjustedInvestorQuarterlyProfit * 4; // 4 quarters and 4x multiple
-                    yearlyValuations.push(yearlyValuation);
-                }
-            }
-
-            const resultsDiv = document.getElementById("results");
-            resultsDiv.innerHTML = `Your quarterly distribution will be <strong>$${formatNumber(investorQuarterlyProfit)}</strong> based on your ownership.`;
-
-            document.getElementById("quarterlyText").innerHTML = quarterlyText;
-            document.getElementById("totalPaid").innerHTML = `Total Paid to Investor: $${formatNumber(totalPaidToInvestor)}`;
-
-            const distributionCtx = document.getElementById("distributionChart").getContext('2d');
             new Chart(distributionCtx, {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: 20}, (_, i) => `Q${i + 1}`),
+                    labels: Array.from({length: totalQuarters}, (_, i) => `Q${i + 1}`),
                     datasets: [{
                         label: 'Quarterly Distributions',
-                        data: quarterlyDistributions,
+                        data: quarterlyDistributions.slice(0, totalQuarters),
                         borderColor: 'rgba(75, 192, 192, 1)',
                         fill: false
                     }]
                 },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value, index, values) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
-                }
+                // ... (rest of the code remains the same)
             });
 
-            const valuationCtx = document.getElementById("valuationChart").getContext('2d');
             new Chart(valuationCtx, {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: 5}, (_, i) => `Year ${i + 1}`),
+                    labels: Array.from({length: totalYears}, (_, i) => `Year ${i + 1}`),
                     datasets: [{
                         label: 'Yearly Valuation',
-                        data: yearlyValuations,
+                        data: yearlyValuations.slice(0, totalYears + 1),
                         borderColor: 'rgba(255, 99, 132, 1)',
                         fill: false
                     }]
                 },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value, index, values) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
-                }
+                // ... (rest of the code remains the same)
             });
         }
     </script>
