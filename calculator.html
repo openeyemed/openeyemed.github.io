@@ -76,18 +76,18 @@
             let growthFactor = 1;
 
             for (let i = 1; i <= 20; i++) {
-                if (i > 1) {
+                if (i % 4 === 0) {
                     growthFactor *= (1 + quarterlyGrowthRate);
-                    investorQuarterlyProfit *= growthFactor;
                 }
 
-                totalPaidToInvestor += investorQuarterlyProfit;
-                quarterlyDistributions.push(investorQuarterlyProfit.toFixed(2));
+                const adjustedInvestorQuarterlyProfit = investorQuarterlyProfit * growthFactor;
+                totalPaidToInvestor += adjustedInvestorQuarterlyProfit;
+                quarterlyDistributions.push(adjustedInvestorQuarterlyProfit.toFixed(2));
                 quarterlyLabels.push(`Q${i}`);
-                quarterlyText += `Q${i}: ${formatMoney(investorQuarterlyProfit)}<br>`;
+                quarterlyText += `Q${i}: ${formatMoney(adjustedInvestorQuarterlyProfit)}<br>`;
 
                 if (i % 4 === 0) {
-                    const yearlyNetProfit = 4 * investorQuarterlyProfit;
+                    const yearlyNetProfit = 4 * adjustedInvestorQuarterlyProfit;
                     const yearlyValuation = 4 * yearlyNetProfit;
                     yearlyValuations.push(yearlyValuation.toFixed(2));
                     yearlyLabels.push(`Year ${i / 4}`);
@@ -96,7 +96,7 @@
             }
 
             const resultsDiv = document.getElementById("results");
-            resultsDiv.innerHTML = `Your quarterly distribution will be <strong>${formatMoney(investorQuarterlyProfit)}</strong> based on your ownership.`;
+            resultsDiv.innerHTML = `Your quarterly distribution will be <strong>${formatMoney(adjustedInvestorQuarterlyProfit)}</strong> based on your ownership.`;
 
             document.getElementById("quarterlyText").innerHTML = quarterlyText;
             document.getElementById("totalPaid").innerHTML = `Total Paid to Investor: ${formatMoney(totalPaidToInvestor)}`;
