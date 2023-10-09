@@ -51,19 +51,23 @@
     <canvas id="valuationChart" width="400" height="200"></canvas>
 
     <script>
+        // Function to format money
         function formatMoney(amount) {
             return amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
         }
 
+        // Main calculation function
         function calculateInvestment() {
+            // Fetch and parse input values
             const investorShares = parseFloat(document.getElementById("investorShares").value);
             const netProfit = parseFloat(document.getElementById("netProfit").value);
-            const term = parseFloat(document.getElementById("term").value);
 
+            // Define constants
             const totalShares = 2000000;
             const ownershipPercentage = investorShares / totalShares;
             let investorQuarterlyProfit = netProfit * ownershipPercentage;
 
+            // Initialize variables for storing results
             let quarterlyDistributions = [];
             let yearlyValuations = [];
             let quarterlyLabels = [];
@@ -72,9 +76,11 @@
             let yearlyText = "";
             let totalPaidToInvestor = 0;
 
+            // Calculate quarterly growth rate from annual CAGR
             const quarterlyGrowthRate = Math.pow(1 + 0.25, 1 / 4) - 1;
             let growthFactor = 1;
 
+            // Loop through each quarter
             for (let i = 1; i <= 20; i++) {
                 if (i > 1) {
                     growthFactor *= (1 + quarterlyGrowthRate);
@@ -85,6 +91,7 @@
                 quarterlyLabels.push(`Q${i}`);
                 quarterlyText += `Q${i}: ${formatMoney(adjustedInvestorQuarterlyProfit)}<br>`;
 
+                // Calculate yearly valuations
                 if (i % 4 === 0) {
                     const yearlyNetProfit = 4 * adjustedInvestorQuarterlyProfit;
                     const yearlyValuation = 4 * yearlyNetProfit;
@@ -94,6 +101,7 @@
                 }
             }
 
+            // Display results
             const resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = `Your quarterly distribution will be <strong>${formatMoney(adjustedInvestorQuarterlyProfit)}</strong> based on your ownership.`;
 
@@ -101,7 +109,7 @@
             document.getElementById("totalPaid").innerHTML = `Total Paid to Investor: ${formatMoney(totalPaidToInvestor)}`;
             document.getElementById("yearlyText").innerHTML = yearlyText;
 
-            // Quarterly Distributions Chart
+            // Plot the charts
             const distributionCtx = document.getElementById("distributionChart").getContext('2d');
             new Chart(distributionCtx, {
                 type: 'line',
@@ -116,7 +124,6 @@
                 }
             });
 
-            // Yearly Valuation Chart
             const valuationCtx = document.getElementById("valuationChart").getContext('2d');
             new Chart(valuationCtx, {
                 type: 'line',
