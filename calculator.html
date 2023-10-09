@@ -69,14 +69,14 @@
 
             // Calculate yearly valuations
             let yearlyValuations = [];
-            let yearlyProfit = netProfit * 4;
+            let yearlyProfit = netProfit * 4;  // Quarterly profit multiplied by 4
             for (let i = 0; i <= totalYears; i++) {
-                const valuation = yearlyProfit * 4;
+                const valuation = yearlyProfit * 4;  // 4x multiple
                 const investorValuation = (investorShares / 2000000) * valuation;  // Adjusted for investor's share
                 yearlyValuations.push(investorValuation);
-                yearlyProfit *= 1.25;
+                yearlyProfit *= 1.25;  // 25% CAGR
             }
-
+            
             // Display results
             document.getElementById("results").innerText = `Your quarterly distribution will be $${formatNumber(quarterlyDistributions[0])} based on your ownership.`;
             document.getElementById("quarterlyText").innerText = `Quarterly Distributions: ${quarterlyDistributions.map((q, i) => `Q${i + 1}: $${formatNumber(q)}`).join(", ")}`;
