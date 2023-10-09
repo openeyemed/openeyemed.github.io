@@ -60,7 +60,7 @@
             let quarterlyDistributions = [];
             let yearlyValuations = [investorShares];
 
-            for (let i = 1; i <= term * 4; i++) {
+            for (let i = 1; i <= 20; i++) {
                 if (i > 1) {
                     growthFactor *= (1 + quarterlyGrowthRate);
                 }
@@ -70,7 +70,7 @@
                 quarterlyText += `Q${i}: $${formatNumber(adjustedInvestorQuarterlyProfit)}<br>`;
 
                 if (i % 4 === 0) {
-                    const yearlyValuation = 4 * adjustedInvestorQuarterlyProfit;
+                    const yearlyValuation = 4 * adjustedInvestorQuarterlyProfit * 4; // 4 quarters and 4x multiple
                     yearlyValuations.push(yearlyValuation);
                 }
             }
@@ -85,7 +85,7 @@
             new Chart(distributionCtx, {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: term * 4}, (_, i) => `Q${i + 1}`),
+                    labels: Array.from({length: 20}, (_, i) => `Q${i + 1}`),
                     datasets: [{
                         label: 'Quarterly Distributions',
                         data: quarterlyDistributions,
@@ -99,7 +99,7 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value, index, values) {
-                                    return '$' + value;
+                                    return '$' + value.toLocaleString();
                                 }
                             }
                         }
@@ -111,7 +111,7 @@
             new Chart(valuationCtx, {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: term}, (_, i) => `Year ${i + 1}`),
+                    labels: Array.from({length: 5}, (_, i) => `Year ${i + 1}`),
                     datasets: [{
                         label: 'Yearly Valuation',
                         data: yearlyValuations,
@@ -125,7 +125,7 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value, index, values) {
-                                    return '$' + value;
+                                    return '$' + value.toLocaleString();
                                 }
                             }
                         }
