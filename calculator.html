@@ -72,12 +72,12 @@
             let yearlyText = "";
             let totalPaidToInvestor = 0;
 
-            const monthlyGrowthRate = Math.pow(1 + 0.25, 1 / 12) - 1;
+            const quarterlyGrowthRate = Math.pow(1 + 0.25, 1 / 4) - 1;
             let growthFactor = 1;
 
             for (let i = 1; i <= 20; i++) {
                 if (i > 1) {
-                    growthFactor *= Math.pow(1 + monthlyGrowthRate, 3);  // Increase by the monthly growth rate for each quarter after Q1
+                    growthFactor *= (1 + quarterlyGrowthRate);
                     investorQuarterlyProfit *= growthFactor;
                 }
 
@@ -87,7 +87,7 @@
                 quarterlyText += `Q${i}: ${formatMoney(investorQuarterlyProfit)}<br>`;
 
                 if (i % 4 === 0) {
-                    const yearlyNetProfit = 4 * netProfit * growthFactor;
+                    const yearlyNetProfit = 4 * investorQuarterlyProfit;
                     const yearlyValuation = 4 * yearlyNetProfit;
                     yearlyValuations.push(yearlyValuation.toFixed(2));
                     yearlyLabels.push(`Year ${i / 4}`);
