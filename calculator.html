@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Investment Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <h1>Investment Calculator</h1>
@@ -22,6 +23,12 @@
     <h2>Results</h2>
     <div id="results"></div>
     <div id="quarterlyText"></div>
+    <div id="totalPaid"></div>
+    <canvas id="distributionChart" width="400" height="200"></canvas>
+
+    <h2>Shareholder's Potential Valuation of Shares</h2>
+    <div id="yearlyText"></div>
+    <canvas id="valuationChart" width="400" height="200"></canvas>
 
     <script>
         function calculateInvestment() {
@@ -34,19 +41,58 @@
             const quarterlyGrowthRate = Math.pow(1 + 0.25, 1 / 4) - 1;
             let growthFactor = 1;
             let quarterlyText = "";
+            let totalPaidToInvestor = 0;
+            let quarterlyDistributions = [];
+            let yearlyValuations = [];
 
             for (let i = 1; i <= 20; i++) {
                 if (i > 1) {
                     growthFactor *= (1 + quarterlyGrowthRate);
                 }
                 const adjustedInvestorQuarterlyProfit = investorQuarterlyProfit * growthFactor;
+                totalPaidToInvestor += adjustedInvestorQuarterlyProfit;
+                quarterlyDistributions.push(adjustedInvestorQuarterlyProfit.toFixed(2));
                 quarterlyText += `Q${i}: ${adjustedInvestorQuarterlyProfit.toFixed(2)}<br>`;
+
+                if (i % 4 === 0) {
+                    const yearlyValuation = 4 * adjustedInvestorQuarterlyProfit;
+                    yearlyValuations.push(yearlyValuation.toFixed(2));
+                }
             }
 
             const resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = `Your quarterly distribution will be <strong>${investorQuarterlyProfit.toFixed(2)}</strong> based on your ownership.`;
 
             document.getElementById("quarterlyText").innerHTML = quarterlyText;
+            document.getElementById("totalPaid").innerHTML = `Total Paid to Investor: ${totalPaidToInvestor.toFixed(2)}`;
+
+            const distributionCtx = document.getElementById("distributionChart").getContext('2d');
+            new Chart(distributionCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 20}, (_, i) => `Q${i + 1}`),
+                    datasets: [{
+                        label: 'Quarterly Distributions',
+                        data: quarterlyDistributions,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        fill: false
+                    }]
+                }
+            });
+
+            const valuationCtx = document.getElementById("valuationChart").getContext('2d');
+            new Chart(valuationCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 5}, (_, i) => `Year ${i + 1}`),
+                    datasets: [{
+                        label: 'Yearly Valuation',
+                        data: yearlyValuations,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        fill: false
+                    }]
+                }
+            });
         }
     </script>
 </body>
