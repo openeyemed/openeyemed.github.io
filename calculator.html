@@ -46,7 +46,7 @@
     <div id="totalPaid"></div>
     <canvas id="distributionChart" width="400" height="200"></canvas>
 
-    <h2>Yearly Valuation</h2>
+    <h2>Shareholder's Potential Valuation of Shares</h2>
     <div id="yearlyText"></div>
     <canvas id="valuationChart" width="400" height="200"></canvas>
 
@@ -58,7 +58,6 @@
         function calculateInvestment() {
             const investorShares = parseFloat(document.getElementById("investorShares").value);
             const netProfit = parseFloat(document.getElementById("netProfit").value);
-            const term = parseFloat(document.getElementById("term").value);
 
             const totalShares = 2000000;
             const ownershipPercentage = (investorShares / totalShares);
