@@ -46,17 +46,11 @@
         }
 
         function calculateInvestment() {
-            console.log("Function called");  // Debugging line
-
             const investorShares = parseFloat(document.getElementById("investorShares").value);
             const netProfit = parseFloat(document.getElementById("netProfit").value);
             const term = parseInt(document.getElementById("term").value);
             const totalQuarters = term * 4;
             const totalYears = term;
-
-            console.log("Investor Shares: ", investorShares);  // Debugging line
-            console.log("Net Profit: ", netProfit);  // Debugging line
-            console.log("Term: ", term);  // Debugging line
 
             // Calculate quarterly distributions
             let quarterlyDistributions = [];
@@ -69,49 +63,19 @@
 
             // Calculate yearly valuations
             let yearlyValuations = [];
-            let yearlyProfit = netProfit * 4;  // Quarterly profit multiplied by 4
+            let yearlyProfit = netProfit * 4;
             for (let i = 0; i <= totalYears; i++) {
-                const valuation = yearlyProfit * 4;  // 4x multiple
-                const investorValuation = (investorShares / 2000000) * valuation;  // Adjusted for investor's share
+                const valuation = yearlyProfit * 4;
+                const investorValuation = (investorShares / 2000000) * valuation;
                 yearlyValuations.push(investorValuation);
-                yearlyProfit *= 1.25;  // 25% CAGR
+                yearlyProfit *= 1.25;
             }
-            
+
             // Display results
             document.getElementById("results").innerText = `Your quarterly distribution will be $${formatNumber(quarterlyDistributions[0])} based on your ownership.`;
             document.getElementById("quarterlyText").innerText = `Quarterly Distributions: ${quarterlyDistributions.map((q, i) => `Q${i + 1}: $${formatNumber(q)}`).join(", ")}`;
             document.getElementById("totalPaid").innerText = `Total Paid to Investor: $${formatNumber(quarterlyDistributions.reduce((a, b) => a + b, 0))}`;
             document.getElementById("yearlyText").innerText = `Yearly Valuations: ${yearlyValuations.map((y, i) => `Year ${i + 1}: $${formatNumber(y)}`).join(", ")}`;
-
-            // Plot the graphs
-            const distributionCtx = document.getElementById('distributionChart').getContext('2d');
-            const valuationCtx = document.getElementById('valuationChart').getContext('2d');
-
-            new Chart(distributionCtx, {
-                type: 'line',
-                data: {
-                    labels: Array.from({length: totalQuarters}, (_, i) => `Q${i + 1}`),
-                    datasets: [{
-                        label: 'Quarterly Distributions',
-                        data: quarterlyDistributions,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        fill: false
-                    }]
-                }
-            });
-
-            new Chart(valuationCtx, {
-                type: 'line',
-                data: {
-                    labels: Array.from({length: totalYears + 1}, (_, i) => `Year ${i + 1}`),
-                    datasets: [{
-                        label: 'Yearly Valuation',
-                        data: yearlyValuations,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        fill: false
-                    }]
-                }
-            });
         }
     </script>
 </body>
