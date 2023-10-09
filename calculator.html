@@ -72,7 +72,8 @@
             let yearlyProfit = netProfit * 4;
             for (let i = 0; i <= totalYears; i++) {
                 const valuation = yearlyProfit * 4;
-                yearlyValuations.push(valuation);
+                const investorValuation = (investorShares / 2000000) * valuation;  // Adjusted for investor's share
+                yearlyValuations.push(investorValuation);
                 yearlyProfit *= 1.25;
             }
 
