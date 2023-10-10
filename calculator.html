@@ -58,7 +58,9 @@ function calculate() {
         netProfit *= Math.pow(1 + 0.25, 1/4);
     }
     
-    let yearlyProfit = netProfit * 4;
+        let yearlyProfit = netProfit * 4;
+        let initialValuation = investorShares;  // Initial valuation set to the number of shares
+        yearlyValuations.push(initialValuation);
     
     for (let i = 1; i < term; i++) {
         yearlyProfit *= 1.25;
