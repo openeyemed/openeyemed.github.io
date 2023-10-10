@@ -83,6 +83,55 @@ function calculate() {
     let yearlyProfit = netProfit * 4;
     let initialValuation = investorShares;  // Initial valuation set to the number of shares
     yearlyValuations.push(initialValuation);
+
+    // Calculate quarterly distributions for OpenEye Labs
+        let quarterlyDistributions = [];
+        let totalPaidToInvestor = 0;
+        for (let i = 0; i < term * 4; i++) {
+            const distribution = (investorShares / 2000000) * netProfit;
+            quarterlyDistributions.push(distribution.toFixed(2));
+            totalPaidToInvestor += distribution;
+            netProfit *= Math.pow((1 + 0.25)*0.25, (1 / 4));
+        }
+    
+    // Calculate quarterly distributions for FEELZ Beverages
+        let quarterlyDistributions = [];
+        let totalPaidToInvestor = 0;
+        for (let i = 0; i < term * 4; i++) {
+            const distribution = (investorShares / 3000000) * netProfit;
+            quarterlyDistributions.push(distribution.toFixed(2));
+            totalPaidToInvestor += distribution;
+            netProfit *= Math.pow((1 + 0.25)*0.75, (1 / 4));
+        }
+
+        // Calculate yearly valuations for OpenEye Labs
+        let yearlyValuations = [];
+        let yearlyProfit = netProfit * 4;
+        for (let i = 0; i < term; i++) {
+            const valuation = yearlyProfit * 4;
+            const investorValuation = (investorShares / 2000000) * valuation;
+            yearlyValuations.push(investorValuation.toFixed(2));
+            yearlyProfit *= 1.25;
+        }
+    
+        // Calculate yearly valuations for FEELZ Beverages
+        let yearlyValuations = [];
+        let yearlyProfit = netProfit * 4;
+        for (let i = 0; i < term; i++) {
+            const valuation = yearlyProfit * 4;
+            const investorValuation = (investorShares / 3000000) * valuation;
+            yearlyValuations.push(investorValuation.toFixed(2));
+            yearlyProfit *= 1.25;
+        }
+
+        // Display results
+        document.getElementById("results").innerHTML = `
+            Your quarterly distribution from OpenEye Labs will be $${quarterlyDistributions.join(", ")} based on your ownership.<br>
+            Total Paid to Investor from OpenEye Labs: $${totalPaidToInvestor.toFixed(2)}<br>
+            Shareholder's Potential Valuation of Shares in OpenEye Labs: Year 1: $${yearlyValuations.join(", ")}<br>
+            Your stake in FEELZ Beverages: ${stakeInFEELZ.toFixed(2)}%<br>
+            Total Profit from FEELZ Beverages: $${totalProfitFromFEELZ.toFixed(2)}
+        `;
     
     for (let i = 0; i < term * 4; i++) {
         const distribution = (investorShares / 2000000) * netProfit;
