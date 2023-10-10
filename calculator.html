@@ -52,6 +52,13 @@ function calculate() {
     let initialValuation = investorShares;  // Initial valuation set to the number of shares
     yearlyValuations.push(initialValuation);
     
+    for (let i = 0; i < term * 4; i++) {
+        const distribution = (investorShares / 2000000) * netProfit;
+        quarterlyDistributions.push(distribution);
+        totalPaid += distribution;
+        netProfit *= Math.pow(1 + 0.25, 1 / 4);
+    }
+    
     for (let i = 1; i < term; i++) {
         yearlyProfit *= 1.25;
         const valuation = yearlyProfit * 4;
@@ -62,34 +69,6 @@ function calculate() {
     document.getElementById("quarterlyResults").innerText = "Quarterly Distributions: " + quarterlyDistributions.map((d, i) => `Q${i+1}: $${d.toLocaleString('en-US', {minimumFractionDigits: 2})}`).join(", ");
     document.getElementById("totalPaid").innerText = "Total Paid to Investor: $" + totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2});
     document.getElementById("valuationResults").innerText = "Shareholder's Potential Valuation of Shares: " + yearlyValuations.map((v, i) => `Year ${i+1}: $${v.toLocaleString('en-US', {minimumFractionDigits: 2})}`).join(", ");
-    
-    const ctx1 = document.getElementById('distributionChart').getContext('2d');
-    window.myChart1 = new Chart(ctx1, {
-        type: 'line',
-        data: {
-            labels: Array.from({length: term * 4}, (_, i) => 'Q' + (i + 1)),
-            datasets: [{
-                label: 'Quarterly Distributions',
-                data: quarterlyDistributions,
-                borderColor: 'blue',
-                fill: false
-            }]
-        }
-    });
-    
-    const ctx2 = document.getElementById('valuationChart').getContext('2d');
-    window.myChart2 = new Chart(ctx2, {
-        type: 'line',
-        data: {
-            labels: Array.from({length: term}, (_, i) => 'Year ' + (i + 1)),
-            datasets: [{
-                label: 'Yearly Valuations',
-                data: yearlyValuations,
-                borderColor: 'red',
-                fill: false
-            }]
-        }
-    });
 }
 </script>
 
