@@ -2,6 +2,25 @@
 <html>
 <head>
     <title>Investment Calculator</title>
+    <style>
+    /* Your existing CSS styles here */
+
+    /* Add the media query for mobile responsiveness */
+    @media only screen and (max-width: 768px) {
+      /* Your mobile-specific styles here */
+      body {
+        font-size: 18px;
+      }
+      input[type="number"],
+      select {
+        width: 100%;
+        padding: 12px;
+      }
+      canvas {
+        max-width: 100%;
+      }
+    }
+  </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
