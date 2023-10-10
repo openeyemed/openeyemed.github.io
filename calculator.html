@@ -37,7 +37,6 @@
 
 <script>
 function calculate() {
-    // Clear previous chart instances
     if (window.myChart1) window.myChart1.destroy();
     if (window.myChart2) window.myChart2.destroy();
 
@@ -49,6 +48,9 @@ function calculate() {
     let totalPaid = 0;
     let yearlyValuations = [];
     
+    let initialValuation = investorShares;  // Initial valuation set to the number of shares
+    yearlyValuations.push(initialValuation);
+    
     for (let i = 1; i <= term * 4; i++) {
         const distribution = (investorShares / 2000000) * netProfit;
         quarterlyDistributions.push(distribution);
@@ -57,8 +59,6 @@ function calculate() {
     }
     
     let yearlyProfit = netProfit * 4;
-    let initialValuation = 600000;
-    yearlyValuations.push(initialValuation);
     
     for (let i = 1; i < term; i++) {
         yearlyProfit *= 1.25;
@@ -71,7 +71,6 @@ function calculate() {
     document.getElementById("totalPaid").innerText = "Total Paid to Investor: $" + totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2});
     document.getElementById("valuationResults").innerText = "Shareholder's Potential Valuation of Shares: " + yearlyValuations.map((v, i) => `Year ${i+1}: $${v.toLocaleString('en-US', {minimumFractionDigits: 2})}`).join(", ");
     
-    // Chart for Quarterly Distributions
     const ctx1 = document.getElementById('distributionChart').getContext('2d');
     window.myChart1 = new Chart(ctx1, {
         type: 'line',
@@ -86,7 +85,6 @@ function calculate() {
         }
     });
     
-    // Chart for Yearly Valuations
     const ctx2 = document.getElementById('valuationChart').getContext('2d');
     window.myChart2 = new Chart(ctx2, {
         type: 'line',
