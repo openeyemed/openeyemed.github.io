@@ -47,7 +47,6 @@
             const netProfit = parseFloat(document.getElementById("netProfit").value);
             const term = parseInt(document.getElementById("term").value);
             const totalQuarters = term * 4;
-            const totalYears = term;
 
             // Calculate quarterly distributions
             let quarterlyDistributions = [];
@@ -61,7 +60,7 @@
             // Calculate yearly valuations
             let yearlyValuations = [];
             let yearlyProfit = netProfit * 4;
-            for (let i = 0; i <= totalYears; i++) {
+            for (let i = 0; i < term; i++) {
                 const valuation = yearlyProfit * 4;
                 const investorValuation = (investorShares / 2000000) * valuation;
                 yearlyValuations.push(investorValuation);
