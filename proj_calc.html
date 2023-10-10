@@ -7,19 +7,31 @@
 
     /* Add the media query for mobile responsiveness */
     @media only screen and (max-width: 768px) {
-      /* Your mobile-specific styles here */
+      /* Increase the font size */
       body {
-        font-size: 38px;
+        font-size: 20px;
+        margin: 0;
+        padding: 0;
       }
+    
+      /* Add padding around the main content */
+      .container {
+        padding: 20px;
+      }
+    
+      /* Increase the width and padding for input fields and select boxes */
       input[type="number"],
       select {
-        width: 80%;
-        padding: 40px;
+        width: 100%;
+        padding: 16px;
       }
+    
+      /* Make the charts responsive */
       canvas {
         max-width: 100%;
       }
     }
+
   </style>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
