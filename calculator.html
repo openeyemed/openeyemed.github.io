@@ -15,7 +15,13 @@
 <input type="number" id="netProfit"><br>
 
 <label for="term">Term (in years): </label>
-<input type="number" id="term"><br>
+<select id="term">
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select><br>
 
 <p>*This refers to the first quarterly profit period total. A CAGR of 25% will be used for illustration purposes.</p>
 
@@ -47,7 +53,10 @@ function calculate() {
     }
     
     let yearlyProfit = netProfit * 4;
-    for (let i = 0; i < term; i++) {
+    let initialValuation = 600000; // Setting initial valuation to $600,000
+    yearlyValuations.push(initialValuation);
+    
+    for (let i = 1; i < term; i++) {
         const valuation = yearlyProfit * 4;
         const investorValuation = (investorShares / 2000000) * valuation;
         yearlyValuations.push(investorValuation);
@@ -56,7 +65,7 @@ function calculate() {
     
     document.getElementById("quarterlyResults").innerText = "Your quarterly distribution will be $" + quarterlyDistributions[0].toLocaleString('en-US', {minimumFractionDigits: 2}) + " based on your ownership.";
     document.getElementById("totalPaid").innerText = "Total Paid to Investor: $" + totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2});
-    document.getElementById("valuationResults").innerText = "Shareholder's Potential Valuation of Shares: Year 1: $" + yearlyValuations[0].toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById("valuationResults").innerText = "Shareholder's Potential Valuation of Shares: Year 1: $" + initialValuation.toLocaleString('en-US', {minimumFractionDigits: 2});
     
     // Chart for Quarterly Distributions
     const ctx1 = document.getElementById('distributionChart').getContext('2d');
