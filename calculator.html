@@ -67,9 +67,9 @@ function calculate() {
         yearlyValuations.push(investorValuation);
     }
     
-    document.getElementById("quarterlyResults").innerText = "Your quarterly distribution will be $" + quarterlyDistributions[0].toLocaleString('en-US', {minimumFractionDigits: 2}) + " based on your ownership.";
+    document.getElementById("quarterlyResults").innerText = "Quarterly Distributions: " + quarterlyDistributions.map((d, i) => `Q${i+1}: $${d.toLocaleString('en-US', {minimumFractionDigits: 2})}`).join(", ");
     document.getElementById("totalPaid").innerText = "Total Paid to Investor: $" + totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2});
-    document.getElementById("valuationResults").innerText = "Shareholder's Potential Valuation of Shares: Year 1: $" + initialValuation.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById("valuationResults").innerText = "Shareholder's Potential Valuation of Shares: " + yearlyValuations.map((v, i) => `Year ${i+1}: $${v.toLocaleString('en-US', {minimumFractionDigits: 2})}`).join(", ");
     
     // Chart for Quarterly Distributions
     const ctx1 = document.getElementById('distributionChart').getContext('2d');
