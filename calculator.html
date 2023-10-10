@@ -54,9 +54,9 @@ function calculate() {
         yearlyProfit *= 1.25;
     }
     
-    document.getElementById("quarterlyResults").innerText = "Your quarterly distribution will be $" + quarterlyDistributions[0].toFixed(2) + " based on your ownership.";
-    document.getElementById("totalPaid").innerText = "Total Paid to Investor: $" + totalPaid.toFixed(2);
-    document.getElementById("valuationResults").innerText = "Shareholder's Potential Valuation of Shares: Year 1: $" + yearlyValuations[0].toFixed(2);
+    document.getElementById("quarterlyResults").innerText = "Your quarterly distribution will be $" + quarterlyDistributions[0].toLocaleString('en-US', {minimumFractionDigits: 2}) + " based on your ownership.";
+    document.getElementById("totalPaid").innerText = "Total Paid to Investor: $" + totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById("valuationResults").innerText = "Shareholder's Potential Valuation of Shares: Year 1: $" + yearlyValuations[0].toLocaleString('en-US', {minimumFractionDigits: 2});
     
     // Chart for Quarterly Distributions
     const ctx1 = document.getElementById('distributionChart').getContext('2d');
