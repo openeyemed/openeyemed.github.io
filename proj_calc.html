@@ -5,83 +5,102 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Investment Calculator</h1>
-    <form id="calculator-form">
-        <label for="investorShares">Investor's Shares:</label>
-        <input type="number" id="investorShares" name="investorShares" min="1" max="2000000">
-        <br>
 
-        <label for="netProfit">Quarterly Net Profit After Reserves & Taxes*</label>
-        <input type="number" id="netProfit" name="netProfit">
-        <br>
+<h1>Investment Calculator</h1>
 
-        <label for="term">Term (in years):</label>
-        <select id="term" name="term">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
-        <br>
+<label for="investorShares">Investor's Shares: </label>
+<input type="number" id="investorShares"><br>
 
-        <input type="button" value="Calculate" onclick="calculateInvestment()">
-    </form>
+<label for="netProfit">Quarterly Net Profit After Reserves & Taxes* </label>
+<input type="number" id="netProfit"><br>
 
-    <p>*This refers to the first quarterly profit period total. A CAGR of 25% will be used for illustration purposes.</p>
+<label for="term">Term (in years): </label>
+<select id="term">
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select><br>
 
-    <h2>Results</h2>
-    <div id="results"></div>
-    <div id="quarterlyText"></div>
-    <div id="totalPaid"></div>
-    <canvas id="distributionChart" width="400" height="200"></canvas>
+<p>*This refers to the first quarterly profit period total. A CAGR of 25% will be used for illustration purposes.</p>
 
-    <h2>Shareholder's Potential Valuation of Shares</h2>
-    <div id="yearlyText"></div>
-    <canvas id="valuationChart" width="400" height="200"></canvas>
+<button onclick="calculate()">Calculate</button>
 
-    <script>
-        function formatNumber(num) {
-            return num.toLocaleString('en-US', {maximumFractionDigits: 2});
+<h2>Results</h2>
+<p id="quarterlyResults"></p>
+<p id="totalPaid"></p>
+<p id="valuationResults"></p>
+
+<canvas id="distributionChart"></canvas>
+<canvas id="valuationChart"></canvas>
+
+<script>
+function calculate() {
+    if (window.myChart1) window.myChart1.destroy();
+    if (window.myChart2) window.myChart2.destroy();
+
+    const investorShares = parseFloat(document.getElementById("investorShares").value);
+    let netProfit = parseFloat(document.getElementById("netProfit").value);
+    const term = parseInt(document.getElementById("term").value);
+    
+    let quarterlyDistributions = [];
+    let totalPaid = 0;
+    let yearlyValuations = [];
+    
+    let yearlyProfit = netProfit * 4;
+    let initialValuation = investorShares;  // Initial valuation set to the number of shares
+    yearlyValuations.push(initialValuation);
+    
+    for (let i = 0; i < term * 4; i++) {
+        const distribution = (investorShares / 2000000) * netProfit;
+        quarterlyDistributions.push(distribution);
+        totalPaid += distribution;
+        netProfit *= Math.pow(1 + 0.25, 1 / 4);
+    }
+    
+    for (let i = 1; i < term; i++) {
+        yearlyProfit *= 1.25;
+        const valuation = yearlyProfit * 4;
+        const investorValuation = (investorShares / 2000000) * valuation;
+        yearlyValuations.push(investorValuation);
+    }
+    
+    document.getElementById("quarterlyResults").innerText = "Quarterly Distributions: " + quarterlyDistributions.map((d, i) => `Q${i+1}: $${d.toLocaleString('en-US', {minimumFractionDigits: 2})}`).join(", ");
+    document.getElementById("totalPaid").innerText = "Total Paid to Investor: $" + totalPaid.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById("valuationResults").innerText = "Shareholder's Potential Valuation of Shares: " + yearlyValuations.map((v, i) => `Year ${i+1}: $${v.toLocaleString('en-US', {minimumFractionDigits: 2})}`).join(", ");
+    
+    // Chart for Quarterly Distributions
+    const ctx1 = document.getElementById('distributionChart').getContext('2d');
+    window.myChart1 = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: Array.from({length: term * 4}, (_, i) => `Q${i+1}`),
+            datasets: [{
+                label: 'Quarterly Distributions',
+                data: quarterlyDistributions,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
         }
-
-        function calculateInvestment() {
-            const investorShares = parseFloat(document.getElementById("investorShares").value);
-            const netProfit = parseFloat(document.getElementById("netProfit").value);
-            const term = parseInt(document.getElementById("term").value);
-            const totalQuarters = term * 4;
-            const totalYears = term;
-
-            // ... (rest of the code remains the same)
-
-            new Chart(distributionCtx, {
-                type: 'line',
-                data: {
-                    labels: Array.from({length: totalQuarters}, (_, i) => `Q${i + 1}`),
-                    datasets: [{
-                        label: 'Quarterly Distributions',
-                        data: quarterlyDistributions.slice(0, totalQuarters),
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        fill: false
-                    }]
-                },
-                // ... (rest of the code remains the same)
-            });
-
-            new Chart(valuationCtx, {
-                type: 'line',
-                data: {
-                    labels: Array.from({length: totalYears}, (_, i) => `Year ${i + 1}`),
-                    datasets: [{
-                        label: 'Yearly Valuation',
-                        data: yearlyValuations.slice(0, totalYears + 1),
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        fill: false
-                    }]
-                },
-                // ... (rest of the code remains the same)
-            });
+    });
+    
+    // Chart for Yearly Valuations
+    const ctx2 = document.getElementById('valuationChart').getContext('2d');
+    window.myChart2 = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: Array.from({length: term}, (_, i) => `Year ${i+1}`),
+            datasets: [{
+                label: 'Yearly Valuations',
+                data: yearlyValuations,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
         }
-    </script>
+    });
+}
+</script>
+
 </body>
 </html>
